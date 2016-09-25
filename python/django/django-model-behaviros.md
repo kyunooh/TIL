@@ -107,7 +107,7 @@ class BlogPost(models.Model):
 ```
 
 ### 메소드가 있는 Behaviors
-일반적으로 같은 기능을 하는 메소드들은 behaviors 모델안으로 추출이 가능합니다.
+사실, 같은 기능을 하는 메소드들은 일반화시켜서 behaviors 모델안으로 추출이 가능합니다.
 ```python
 class Permalinkable(models.Model):
     slug = models.SlugField()
@@ -149,4 +149,36 @@ class Publishable(models.Model):
     def is_published(self):
         from django.utils import timezone
         return self.publish_date < timezone.now()
+```
+
+### 구현체와 연결하기
+이제 behaviors으로 추출했으니, 구현체에 상속시켜줌으로써 구현체가 완벽하게 동작할 수 있도록 해줘야 합니다.
+```python
+from .behaviors import Authorable, Permalinkable, Timestampable, Publishable
+
+
+class BlogPost(Authorable, Permalinkable, Timestampable, Publishable, models.Model):
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+
+    url_name = "blog-post"
+
+    @property
+    def slug_source(self):
+        return self.title
+```
+
+## 이름짓는 방법
+동사 + able 형태의 패턴을 사용하세요. 접미사로 able을 사용한다면 behaviors 임을 알아차릴 수 있습니다. 이 방법은 현재 이미 사용하고 있는 단어들과 섞이는 것도 막을 수 있습니다.(OptionallyGenericRelateable같은 일반적이지 않은 영어를 쓰면 어떡하지에 대한 걱정은 하지마세요.)
+
+## 커스텀 쿼리셋 체이닝
+우리 모두 체인 쿼리셋 메소드는 잘 알고 있습니다. 하지만 커스텀 매니저 메소드도 잘 알고 계신가요? Author(username1)과 Published(publish_date가 과거의 시간인) 포스트를 찾아봅시다.
+
+### 캡슐화가 없는 쿼리셋
+```python
+from django.utils import timezone
+from .models import BlogPost
+
+>>> BlogPost.objects.filter(author__username='username1') \
+.filter(publish_date__lte=timezone.now())
 ```
