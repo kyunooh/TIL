@@ -171,7 +171,7 @@ class BlogPost(Authorable, Permalinkable, Timestampable, Publishable, models.Mod
 ## 이름짓는 방법
 동사 + able 형태의 패턴을 사용하세요. 접미사로 able을 사용한다면 behaviors 임을 알아차릴 수 있습니다. 이 방법은 현재 이미 사용하고 있는 단어들과 섞이는 것도 막을 수 있습니다.(OptionallyGenericRelateable같은 일반적이지 않은 영어를 쓰면 어떡하지에 대한 걱정은 하지마세요.)
 
-## 커스텀 쿼리셋 체이닝
+## 커스텀 쿼리셋 체이닝(Custom QuerySet Chaining)
 우리 모두 체인 쿼리셋 메소드는 잘 알고 있습니다. 하지만 커스텀 매니저 메소드도 잘 알고 계신가요? Author(username1)과 Published(publish_date가 과거의 시간인) 포스트를 찾아봅시다.
 
 ### 캡슐화가 없는 쿼리셋
@@ -182,3 +182,92 @@ from .models import BlogPost
 >>> BlogPost.objects.filter(author__username='username1') \
 .filter(publish_date__lte=timezone.now())
 ```
+
+### 커스텀 매니저
+Author와 Published 필터 메소드를 커스텀 매니저에 만들어 봅시다.
+```python
+class BlogPostManager(models.Manager):
+
+    def published(self):
+        from django.utils import timezone
+        return self.filter(publish_date__lte=timezone.now())
+
+    def authored_by(self, author):
+        return self.filter(author__username=author)
+
+
+class BlogPost(models.Model):
+    ...
+
+    objects = BlogPostManager()
+```
+
+```python
+>>> published_posts = BlogPost.objects.published()
+>>> posts_by_author = BlockPost.objects.authored_by('username1')
+```
+
+### 커스텀 매니저의 필터는 어떻게 체이닝하죠?
+만들었던 필터들을 체이닝 하고 싶으면 어떻게 하죠?
+```python
+>>> BlogPost.objects.authored_by('username1').published()
+AttributeError: 'QuerySet' object has no attribute 'published'
+
+>>> type(Blogpost.objects.authored_by('username1'))
+<class 'django.db.models.query.QuerySet'>
+```
+
+#### 해결방법 > 커스텀 쿼리셋
+[django-model-utils](https://github.com/carljm/django-model-utils "django-model-utils")의 PassthroughManager를 이용해서 커스텀 매니저의 메소드를 체이닝할 수 있습니다.
+```python
+from model_utils.managers import PassThroughManager
+
+class PublishableQuerySet(models.query.QuerySet):
+    def published(self):
+        from django.utils import timezone
+        return self.filter(publish_date__lte=timezone.now())
+
+
+class AuthorableQuerySet(models.query.QuerySet):
+    def authored_by(self, author):
+        return self.filter(author__username=author)
+
+class BlogPostQuerySet(AuthorableQuerySet, PublishableQuerySet):
+    pass
+
+
+class BlogPost(Authorable, Permalinkable, Timestampable, Publishable, models.Model):
+    ...
+
+    objects = PassThroughManager.for_queryset_class(BlogPostQuerySet)()
+```
+
+이제 여러개의 behaviors를 상속받아서 커스텀 메소드 체인이 가능합니다..
+
+```python
+>>> author_public_posts = BlogPost.objects.authored_by('username1').published()
+
+>>> type(Blogpost.objects.authored_by('username1'))
+<class 'example.queryset.BlogPostQuerySet'>
+```
+
+### 분리된 비즈니스 로직
+다음 중 어떤게 읽기 쉽고 유지보수 하기에 쉬워 보이시나요?
+```python
+BlogPost.objects.filter(author__username='username1').filter(publish_date__lte=timezone.now())
+```
+```python
+BlogPost.objects.authored_by('username1').published()
+```
+
+## Behaviors를 테스트하기
+모델에 적합한 Behaivors 테스트를 만들어봅시다.
+
+#### 모델에서 얻었던 것과 동일한 장점들
+- 중복 제거(DRY)
+- 가독성(Readability)
+- 재사용성(Reusability)
+- 단일 책임 원칙(Single Responsibility Principle)
+
+### 유닛테스트 예제
+//TODO
