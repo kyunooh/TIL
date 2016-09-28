@@ -5,6 +5,7 @@
 
 ## 구성모델 행위 (Compositional Model Behaviors)
 구성모델 패턴은 각 기능별로 구성요소를 쪼개서 여러분이 모델의 복잡성을 관리 할 수 있게 해줍니다.
+> 역자 주) 본문에서 상황에 맞게 behaviors(행동, 행위)를 번역하거나 영어 그대로 사용하였습니다.
 
 ### 거대 모델(Fat Models)의 장점
 - 캡슐화(Encapsulation)
@@ -263,11 +264,75 @@ BlogPost.objects.authored_by('username1').published()
 ## Behaviors를 테스트하기
 모델에 적합한 Behaivors 테스트를 만들어봅시다.
 
-#### 모델에서 얻었던 것과 동일한 장점들
+#### 모델에 적용했을 때와 동일한 장점들
 - 중복 제거(DRY)
 - 가독성(Readability)
 - 재사용성(Reusability)
 - 단일 책임 원칙(Single Responsibility Principle)
 
 ### 유닛테스트 예제
-//TODO
+우리는 behaviors를 검증할 재사용 가능한 테스트 컴포넌트들을 만들 수 있습니다. 테스트 믹스인 목록은 각 모델이 맡은 역할에 대한 문서가 됩니다.
+
+### 기존의 테스트
+```python
+from django.test import TestCase
+
+from .models import BlogPost
+
+
+class BlogPostTestCase(TestCase):
+    def test_published_blogpost(self):
+        from django.utils import timezone
+        blogpost = BlogPost.objects.create(publish_date=timezone.now())
+        self.assertTrue(blogpost.is_published)
+        self.assertIn(blogpost, BlogPost.objects.published())
+```
+
+### Behavior 테스트 믹스인으로 변환
+```python
+class BehaviorTestCaseMixin(object):
+    def get_model(self):
+            return getattr(self, 'model')
+
+    def create_instance(self, **kwargs):
+        raise NotImplementedError("Implement me")
+
+
+class PublishableTests(BehaviorTestCaseMixin):
+    def test_published_blogpost(self):
+        from django.utils import timezone
+        obj = self.create_instance(publish_date=timezone.now())
+        self.assertTrue(obj.is_published)
+        self.assertIn(obj, self.model.objects.published())
+```
+
+### 변경된 유닛 테스트
+```python
+from django.test import TestCase
+
+from .models import BlogPost
+from .behaviors.tests import PublishableTests
+
+
+class BlogPostTestCase(PublishableTests, TestCase):
+    model = BlogPost
+
+    def create_instance(self, **kwargs):
+        return BlogPost.objects.create(**kwargs)
+```
+
+### 모델을 명시된 테스트들 조합함
+```python
+class BlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, TimestampableTests, TestCase):
+    model = BlogPost
+
+    def create_instance(self, **kwargs):
+        return BlogPost.objects.create(**kwargs)
+
+    def test_blog_specific_functionality(self):
+        ...
+```
+
+### 추가적인 모델 테스팅 팁
+// TODO
+
