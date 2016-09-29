@@ -332,13 +332,3 @@ class BlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, Ti
     def test_blog_specific_functionality(self):
         ...
 ```
-
-## 추가적인 모델 테스팅 팁
-URL 이름 공간은 앱 레벨 또는 인스턴스 레벨에서의 구분자를 제공한다. URL 이름공간은  필요 없어보이지만 이용하기 시작하면 왜 그동안 쓰지 않았을까 생각이 드는 것 중 하나다
-
-### URL이를음  짧고, 명환하고, 반복되는 작업을 피해서 작성하는 방법
-예제에서 tastings_detail이나 tastings_results처럼 모델이나 앱의 이름을 복사한 URL 이름들은 더 이상 볼 수 없다. 대신 detail이나 results 같은 좀더 명확한 이름이 보인다. 이는 장고에 처음 입문하는 개발자들이 앱을 좀 더 쉽게 이해하는 데 도움이 된다. 
-
-### 서드 파티 라이브러리와 상호 운영성을 높이기 
-URL 이름을 "(myapp)\_detail" 등의  방법으로 부를 때 생기는 또 다른 문제는 이  (myapp)부분이 서로 겹칠 때 벌어진다. 우리의 tastings 앱과 같은 경우에 문제가 되지는 않지만 제작자의 블로그나 주소록 애플리케이션의 경우 충분히 문제가 될 수 있다. 이런 굥우 URL 이름공간을 통해 이를 간단히 해결할 수 있다. 예제는 책을 참고하자
-
