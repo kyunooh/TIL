@@ -339,13 +339,15 @@ class BlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, Ti
 ```python
 
 class StaffBlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, TimestampableTests, BaseBlogPostTestCase):
-    det setUp(self):
+    def setUp(self):
         self.user = StaffUser()
 
 class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, TimestampableTests, BaseBlogPostTestCase):
-    det setUp(self):
+    def setUp(self):
         self.user = AuthorizedUser()
 ```
+(Staff이든 Authorized User이든 예상되는 행동이 같을 때)
 
-
+## 재사용성
+//TODO
 
