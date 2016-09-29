@@ -332,3 +332,20 @@ class BlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, Ti
     def test_blog_specific_functionality(self):
         ...
 ```
+
+## 추가적인 모델 테스팅 팁
+- 인스턴스나 픽시쳐를 테스트 하기위해 [https://github.com/dnerdy/factory_boy](https://github.com/dnerdy/factory_boy|Factory Boy)를 사용하세요.
+- 테스트 케이스 상속을 사용해서 다른 시나리오를 검증하세요.
+```python
+
+class StaffBlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, TimestampableTests, BaseBlogPostTestCase):
+    det setUp(self):
+        self.user = StaffUser()
+
+class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, TimestampableTests, BaseBlogPostTestCase):
+    det setUp(self):
+        self.user = AuthorizedUser()
+```
+
+
+
