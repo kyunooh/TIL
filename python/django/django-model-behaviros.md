@@ -349,5 +349,19 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 (Staff이든 Authorized User이든 예상되는 행동이 같을 때)
 
 ## 재사용성
-//TODO
+## 결국엔 Behavrois 라이브러리를 구축
+- Permalinkable
+- Publishable
+- Authorable
+- Timestampable
+
+## 만든 앱들간에서도 재사용 가는하고 커뮤니티를 통해 공유도 가능
+더 많은 예시 
+- Moderatable - BooleanField('approved') 
+- Scheduleable - (range 쿼리를 사용할 start_date 와 end_date) 
+- GenericRelatable (실과 바늘 같은 content_type, object_id, GenericForeignKey)
+- Orderable - PositiveSmallIntegerField('position')
+> 역자주 : 본문에서는 triplet(세쌍둥이)를 사용하여서 의역했습니다. GenericRelatable (the triplet of content_type, object_id and GenericForeignKey) 
+
+
 
