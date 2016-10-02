@@ -355,7 +355,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 - Authorable
 - Timestampable
 
-## 만든 앱들간에서도 재사용 가는하고 커뮤니티를 통해 공유도 가능
+## 앱들 간 재사용 가능하며 커뮤니티를 통해 공유도 가능
 더 많은 예시 
 - Moderatable - BooleanField('approved') 
 - Scheduleable - (range 쿼리를 사용할 start_date 와 end_date) 
