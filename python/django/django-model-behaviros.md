@@ -363,5 +363,13 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 - Orderable - PositiveSmallIntegerField('position')
 > 역자주 : 본문에서는 triplet(세쌍둥이)를 사용하여서 의역했습니다. GenericRelatable (the triplet of content_type, object_id and GenericForeignKey) 
 
+## 추천하는 앱 레이아웃
+- querysets.py
+- behaviors.py (querysets을 이용)
+- models.py (querysets과 behaviors로 구성됨)
+- factories.py (models을 이용함)
+- tests.py (모든 것을 이용, 큰 앱들을 위해 모듈로 나눔)
+
+전 공유되는 behaviors, model, behavior test 믹스인을 `common` 앱에 담아서 사용할 때가 많습니다.
 
 
