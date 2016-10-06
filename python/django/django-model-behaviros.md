@@ -372,4 +372,11 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 
 전 공유되는 behaviors, model, behavior test 믹스인을 `common` 앱에 담아서 사용할 때가 많습니다.
 
+## 한계와 문제점
+기본적인 장고 모델 상속에 대해 도전한다는 것
 
+## 얕은 추상화 
+- 메타 옵션들을 명시적이지 않게 상속하지 마세요(정렬 등)
+- Manager vs Queryset vs Model (약간의 로직 중복)
+- ModelField 옵션들 (default=True vs default=False 을 오가면서 변경)
+//TODO
