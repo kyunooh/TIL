@@ -372,11 +372,24 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 
 전 공유되는 behaviors, model, behavior test 믹스인을 `common` 앱에 담아서 사용할 때가 많습니다.
 
-## 한계와 문제점
-기본적인 장고 모델 상속에 대해 도전한다는 것
+## 한계와 위험
+기본적으로 장고 모델 상속에 대해 도전
 
-## 얕은 추상화 
+### 얕은 추상화 
 - 메타 옵션들을 명시적이지 않게 상속하지 마세요(정렬 등)
 - Manager vs Queryset vs Model (약간의 로직 중복)
 - ModelField 옵션들 (default=True vs default=False 을 오가면서 변경)
-//TODO
+종종 커스텀 쿼리셋을 합치거나, 메타 옵션들을 조합하는 등 구성요소들을 다뤄야 할 수도 있습니다.
+
+## 서드 파티 헬퍼
+꼭 해야할 필요가 없다면 `바퀴의 재발명`을 하지 마세요!
+> 역자주: 바퀴의 재발명이란, 프로그래밍에서 존재하는 기술이 있다면 사용하고 새로 만들지 말라는 격언입니다. 
+- [Django Extensions](https://github.com/django-extensions/django-extensions)(UUIDField, AutoSlugField 등)
+- [Django Model Utils](https://github.com/carljm/django-model-utils)(이미 위에서 언급)
+- Filters ([django-filter](https://github.com/carltongibson/django-filter))
+
+### 테스터 헬퍼
+- Factories ([factory boy](https://github.com/dnerdy/factory_boy)) Mocking ([mock](http://www.voidspace.org.uk/python/mock/))
+
+## 결론
+여기에 사용된 모든 예제 코드들은 [Github 프로젝트](https://github.com/kevinastone/django-model-behaviors-example)에서 확인 가능합니다.
