@@ -384,6 +384,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 ## 서드 파티 헬퍼
 꼭 해야할 필요가 없다면 `바퀴의 재발명`을 하지 마세요!
 > 역자주: 바퀴의 재발명이란, 프로그래밍에서 존재하는 기술이 있다면 사용하고 새로 만들지 말라는 격언입니다. 
+
 - [Django Extensions](https://github.com/django-extensions/django-extensions)(UUIDField, AutoSlugField 등)
 - [Django Model Utils](https://github.com/carljm/django-model-utils)(이미 위에서 언급)
 - Filters ([django-filter](https://github.com/carltongibson/django-filter))
