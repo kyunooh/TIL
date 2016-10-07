@@ -5,7 +5,7 @@
 
 ## 구성모델 행위 (Compositional Model Behaviors)
 구성모델 패턴은 각 기능별로 구성요소를 쪼개서 여러분이 모델의 복잡성을 관리 할 수 있게 해줍니다.
-> 역자 주) 본문에서 상황에 맞게 behaviors(행동, 행위)를 번역하거나 영어 그대로 사용하였습니다.
+> 역자주) 본문에서 상황에 맞게 behaviors(행동, 행위)를 번역하거나 영어 그대로 사용하였습니다.
 
 ### 거대 모델(Fat Models)의 장점
 - 캡슐화(Encapsulation)
@@ -361,7 +361,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 - Scheduleable - (range 쿼리를 사용할 start_date 와 end_date) 
 - GenericRelatable (실과 바늘 같은 content_type, object_id, GenericForeignKey)
 - Orderable - PositiveSmallIntegerField('position')
-> 역자주 : 본문에서는 triplet(세쌍둥이)를 사용하여서 의역했습니다. GenericRelatable (the triplet of content_type, object_id and GenericForeignKey) 
+> 역자주) 본문에서는 triplet(세쌍둥이)를 사용하여서 의역했습니다. GenericRelatable (the triplet of content_type, object_id and GenericForeignKey) 
 
 ## 추천하는 앱 레이아웃
 - querysets.py
@@ -383,7 +383,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 
 ## 서드 파티 헬퍼
 꼭 해야할 필요가 없다면 `바퀴의 재발명`을 하지 마세요!
-> 역자주: 바퀴의 재발명이란, 프로그래밍에서 존재하는 기술이 있다면 사용하고 새로 만들지 말라는 격언입니다. 
+> 역자주) 바퀴의 재발명이란, 프로그래밍에서 존재하는 기술이 있다면 사용하고 새로 만들지 말라는 격언입니다. 
 
 - [Django Extensions](https://github.com/django-extensions/django-extensions)(UUIDField, AutoSlugField 등)
 - [Django Model Utils](https://github.com/carljm/django-model-utils)(이미 위에서 언급)
