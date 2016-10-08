@@ -1,7 +1,7 @@
 # 장고 모델 행동(Django Model Behaviors) By Kevin Stone
 본 글은 http://blog.kevinastone.com/django-model-behaviors.html 의 글을 번역했습니다.
 
-간단하고 깔끔한 튜토리얼 정도가 아닌, 복잡성이 큰 장고 프로젝트에선 어떻게 모델들을 잘 관리하도록 구성할까요? 10여개에서 100여개의 모델들, 수많은 뷰와 템플릿, 그리고 테스트들에 대해서 얘기해보려 합니다.
+간단하고 깔끔한 튜토리얼 정도가 아닌, 복잡성이 큰 장고 프로젝트에선 어떻게 모델들을 잘 관리하도록 구성할까요? 10여개에서 100여개의 모델들, 수많은 뷰와 템플릿, 그리고 테스트들에 대해서 이야기 해봅시다.
 
 ## 구성모델 행위 (Compositional Model Behaviors)
 구성모델 패턴은 각 기능별로 구성요소를 쪼개서 여러분이 모델의 복잡성을 관리 할 수 있게 해줍니다.
@@ -32,8 +32,8 @@ class BlogPost(models.Model):
     publish_date = models.DateTimeField(null=True)
 ```
 
-### 각각의 행위들을 분해한다
-Behaviors 패턴의 목적은 핵심에 있는 모델들을 재사용 가능한 mixin으로 분리하는 겁니다. 모델 필드보단, 의도된 비즈니스 로직을 캡슐화할 더 높은 수준의 추상화를 만듭니다.
+### 각각의 행위들을 분리한다
+Behaviors 패턴의 목적은 핵심에 있는 모델들을 재사용 가능한 mixin으로 분리합니다. 모델 필드보단, 의도된 비즈니스 로직을 캡슐화할 더 높은 수준의 추상화를 만듭니다.
 ```python
 from .behaviors import Authorable, Permalinkable, Timestampable, Publishable
 
@@ -74,7 +74,7 @@ class Timestampable(models.Model):
         abstract = True
 ```
 
-## 필드(field)보다 많은 모델
+## 필드(field, 멤버변수)보다 많은 모델들
 우리가 처음으로 잘라낸 공통된 behaviors는 공통 필드 뿐이었습니다. 하지만 필드외에 다른 것들은 어떻게 추상화 할까요?
  - 프로퍼티
  - 커스텀 메소드
@@ -83,7 +83,7 @@ class Timestampable(models.Model):
  - 쿼리셋 (QuerySets)
 
 ### 모델 메소드 확인
-이제 비즈니스 로직들이 캡슐화 된 거대모델도 살펴봅시다.
+이제 비즈니스 로직들이 캡슐화 된 거대모델(fat model)도 살펴봅시다.
 ```python
 
 class BlogPost(models.Model):
@@ -153,7 +153,7 @@ class Publishable(models.Model):
 ```
 
 ### 구현체와 연결하기
-이제 behaviors으로 추출했으니, 구현체에 상속시켜줌으로써 구현체가 완벽하게 동작할 수 있도록 해줘야 합니다.
+이제 behaviors으로 추출했으니, 구현체에 상속시켜줌으로써 구현체가 완벽하게 동작할 수 있도록 해줍시다.
 ```python
 from .behaviors import Authorable, Permalinkable, Timestampable, Publishable
 
@@ -209,7 +209,7 @@ class BlogPost(models.Model):
 ```
 
 ### 커스텀 매니저의 필터는 어떻게 체이닝하죠?
-만들었던 필터들을 체이닝 하고 싶으면 어떻게 하죠?
+만들었던 필터들을 체이닝 하고 싶으면 어떻게 할까요?
 ```python
 >>> BlogPost.objects.authored_by('username1').published()
 AttributeError: 'QuerySet' object has no attribute 'published'
@@ -219,7 +219,7 @@ AttributeError: 'QuerySet' object has no attribute 'published'
 ```
 
 #### 해결방법 > 커스텀 쿼리셋
-[django-model-utils](https://github.com/carljm/django-model-utils "django-model-utils")의 PassthroughManager를 이용해서 커스텀 매니저의 메소드를 체이닝할 수 있습니다.
+[django-model-utils](https://github.com/carljm/django-model-utils)의 PassthroughManager를 이용해서 커스텀 매니저의 메소드를 체이닝할 수 있습니다.
 ```python
 from model_utils.managers import PassThroughManager
 
@@ -334,7 +334,7 @@ class BlogPostTestCase(PublishableTests, AuthorableTests, PermalinkableTests, Ti
 ```
 
 ## 추가적인 모델 테스팅 팁
-- 인스턴스나 픽시쳐를 테스트 하기위해 [https://github.com/dnerdy/factory_boy](https://github.com/dnerdy/factory_boy|Factory Boy)를 사용하세요.
+- 인스턴스나 픽스쳐를 테스트 하기위해 [https://github.com/dnerdy/factory_boy](https://github.com/dnerdy/factory_boy)를 사용하세요.
 - 테스트 케이스 상속을 사용해서 다른 시나리오를 검증하세요.
 ```python
 
@@ -349,16 +349,16 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 (Staff이든 Authorized User이든 예상되는 행동이 같을 때)
 
 ## 재사용성
-## 결국엔 Behavrois 라이브러리를 구축
+## 결국엔 Behavrois 라이브러리를 구축하게 됨
 - Permalinkable
 - Publishable
 - Authorable
 - Timestampable
 
-## 앱들 간 재사용 가능하며 커뮤니티를 통해 공유도 가능
-더 많은 예시 
-- Moderatable - BooleanField('approved') 
-- Scheduleable - (range 쿼리를 사용할 start_date 와 end_date) 
+## 앱들 간 재사용 가능하며 커뮤니티를 통해서도 공유가 가능
+더 많은 예시
+- Moderatable - BooleanField('approved')
+- Scheduleable - (range 쿼리를 사용할 start_date 와 end_date)
 - GenericRelatable (실과 바늘 같은 content_type, object_id, GenericForeignKey)
 - Orderable - PositiveSmallIntegerField('position')
 > 역자주) 본문에서는 triplet(세쌍둥이)를 사용하여서 의역했습니다. GenericRelatable (the triplet of content_type, object_id and GenericForeignKey) 
@@ -375,7 +375,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 ## 한계와 위험
 기본적으로 장고 모델 상속에 대해 도전
 
-### 얕은 추상화 
+### 얕은 추상화
 - 메타 옵션들을 명시적이지 않게 상속하지 마세요(정렬 등)
 - Manager vs Queryset vs Model (약간의 로직 중복)
 - ModelField 옵션들 (default=True vs default=False 을 오가면서 변경)
@@ -383,7 +383,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 
 ## 서드 파티 헬퍼
 꼭 해야할 필요가 없다면 `바퀴의 재발명`을 하지 마세요!
-> 역자주) 바퀴의 재발명이란, 프로그래밍에서 존재하는 기술이 있다면 사용하고 새로 만들지 말라는 격언입니다. 
+> 역자주) 바퀴의 재발명이란, 프로그래밍에서 존재하는 기술이 있다면 사용하고 새로 만들지 말라는 격언입니다.
 
 - [Django Extensions](https://github.com/django-extensions/django-extensions)(UUIDField, AutoSlugField 등)
 - [Django Model Utils](https://github.com/carljm/django-model-utils)(이미 위에서 언급)
