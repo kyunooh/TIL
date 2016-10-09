@@ -394,3 +394,8 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 
 ## 결론
 여기에 사용된 모든 예제 코드들은 [Github 프로젝트](https://github.com/kevinastone/django-model-behaviors-example)에서 확인 가능합니다.
+
+#### 번역을 마치며
+- 오역 또는 오탈자에 대해선 댓글 혹은 메일을 남겨주세요.
+- 본 번역은 원저자의 허락을 받지는 못했습니다.(현재 연락을 시도해보고는 있습니다…)
+- 원글에서도 임포트를 함수 내에서 하는 건 안티패턴이 아니냐는 댓글이 달려있습니다.. 저자의 정확한 의도는 잘 모르겠지만 개인적으론 일반적인 코딩 컨벤션을 준수하는 것이 좋다고 생각하는 바이며, 번역한 글에서는 모든 코드에 대해서 전혀 수정하지 않았습니다.
