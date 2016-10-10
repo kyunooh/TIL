@@ -3,9 +3,10 @@
 
 간단하고 깔끔한 튜토리얼 정도가 아닌, 복잡성이 큰 장고 프로젝트에선 어떻게 모델들을 잘 관리하도록 구성할까요? 10여개에서 100여개의 모델들, 수많은 뷰와 템플릿, 그리고 테스트들에 대해서 이야기 해봅시다.
 
+> 역자주) 본문에서 상황에 맞게 behaviors(행동, 행위)를 번역하거나 영어 그대로 사용하였습니다.
+
 ## 구성모델 행위 (Compositional Model Behaviors)
 구성모델 패턴은 각 기능별로 구성요소를 쪼개서 여러분이 모델의 복잡성을 관리 할 수 있게 해줍니다.
-> 역자주) 본문에서 상황에 맞게 behaviors(행동, 행위)를 번역하거나 영어 그대로 사용하였습니다.
 
 ### 거대 모델(Fat Models)의 장점
 - 캡슐화(Encapsulation)
@@ -218,7 +219,7 @@ AttributeError: 'QuerySet' object has no attribute 'published'
 <class 'django.db.models.query.QuerySet'>
 ```
 
-#### 해결방법 > 커스텀 쿼리셋
+#### 해결방법: 커스텀 쿼리셋
 [django-model-utils](https://github.com/carljm/django-model-utils)의 PassthroughManager를 이용해서 커스텀 매니저의 메소드를 체이닝할 수 있습니다.
 ```python
 from model_utils.managers import PassThroughManager
@@ -243,7 +244,7 @@ class BlogPost(Authorable, Permalinkable, Timestampable, Publishable, models.Mod
     objects = PassThroughManager.for_queryset_class(BlogPostQuerySet)()
 ```
 
-이제 여러개의 behaviors를 상속받아서 커스텀 메소드 체인이 가능합니다..
+이제 여러개의 behaviors를 상속받아서 커스텀 메소드 체인이 가능합니다.
 
 ```python
 >>> author_public_posts = BlogPost.objects.authored_by('username1').published()
@@ -253,7 +254,7 @@ class BlogPost(Authorable, Permalinkable, Timestampable, Publishable, models.Mod
 ```
 
 ### 분리된 비즈니스 로직
-다음 중 어떤게 읽기 쉽고 유지보수 하기에 쉬워 보이시나요?
+다음 중 어떤게 읽기 쉽고 유지보수 하기도 쉬워 보이시나요?
 ```python
 BlogPost.objects.filter(author__username='username1').filter(publish_date__lte=timezone.now())
 ```
@@ -379,7 +380,7 @@ class AuthorizedUserBlogPostTestCase(PublishableTests, AuthorableTests, Permalin
 - 메타 옵션들을 명시적이지 않게 상속하지 마세요(정렬 등)
 - Manager vs Queryset vs Model (약간의 로직 중복)
 - ModelField 옵션들 (default=True vs default=False 을 오가면서 변경)
-종종 커스텀 쿼리셋을 합치거나, 메타 옵션들을 조합하는 등 구성요소들을 다뤄야 할 수도 있습니다.
+종종 커스텀 쿼리셋을 합치거나, 메타 옵션들을 조합하는 등 구성요소들을 다뤄야 합니다.
 
 ## 서드 파티 헬퍼
 꼭 해야할 필요가 없다면 `바퀴의 재발명`을 하지 마세요!
