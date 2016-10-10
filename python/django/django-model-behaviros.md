@@ -1,5 +1,5 @@
 # 장고 모델 행동(Django Model Behaviors) By Kevin Stone
-본 글은 http://blog.kevinastone.com/django-model-behaviors.html 의 글을 번역했습니다.
+본 글은 http://blog.kevinastone.com/django-model-behaviors.html 의 글을 번역한 것입니다.
 
 간단하고 깔끔한 튜토리얼 정도가 아닌, 복잡성이 큰 장고 프로젝트에선 어떻게 모델들을 잘 관리하도록 구성할까요? 10여개에서 100여개의 모델들, 수많은 뷰와 템플릿, 그리고 테스트들에 대해서 이야기 해봅시다.
 
@@ -174,7 +174,7 @@ class BlogPost(Authorable, Permalinkable, Timestampable, Publishable, models.Mod
 동사 + able 형태의 패턴을 사용하세요. 접미사로 able을 사용한다면 behaviors 임을 알아차릴 수 있습니다. 이 방법은 현재 이미 사용하고 있는 단어들과 섞이는 것도 막을 수 있습니다.(OptionallyGenericRelateable같은 일반적이지 않은 영어를 쓰면 어떡하지에 대한 걱정은 하지마세요.)
 
 ## 커스텀 쿼리셋 체이닝(Custom QuerySet Chaining)
-우리 모두 체인 쿼리셋 메소드는 잘 알고 있습니다. 하지만 커스텀 매니저 메소드도 잘 알고 계신가요? Author(username1)과 Published(publish_date가 과거의 시간인) 포스트를 찾아봅시다.
+우리 모두 체인 쿼리셋 메소드는 잘 알고 있습니다. 하지만 커스텀 매니저 메소드도 잘 알고 계신가요? Author(username1)와 Published(publish_date가 과거의 시간인) 포스트를 찾아봅시다.
 
 ### 캡슐화가 없는 쿼리셋
 ```python
